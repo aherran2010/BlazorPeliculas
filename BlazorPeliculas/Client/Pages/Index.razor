@@ -8,51 +8,32 @@
     </button>*@
 
 <div>
-    <h3>Películas</h3>
-    @*@foreach (var pelicula in ObtenerPeliculas())
-        {
-            <div>
-                <p>Título: <b>@pelicula.Titulo</b></p>
-                <p>Fecha Lanzamiento: <b>@pelicula.Lanzamiento.ToString("dd MMM yyyy")</b></p>
-            </div>
-        }*@
-
-    @if (Peliculas == null)
-    {
-        <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" />
-        <text>Cargando...</text>
-    }
-    else if (Peliculas.Count == 0)
-    {
-        <text>No hay registros para mostrar...</text>
-    }
-    else
-    {
-        @for (var i = 0; i < Peliculas.Count; i++)
-        {
-            <div>
-                @if (i == Peliculas.Count - 1)
-                {
-                    <p>Esta es la última película</p>
-                }
-                <p>@(i + 1)) Título: @((MarkupString)Peliculas[i].Titulo)</p>
-                <p>Fecha Lanzamiento: <b>@Peliculas[i].Lanzamiento.ToString("dd MMM yyyy")</b></p>
-            </div>
-        }
-    }
+    <h3>Películas</h3>    
+    <ListadoPeliculas Peliculas="ObtenerPeliculas()">
+        @*<Cargando><text>Me paso el dia Cargando...</text></Cargando>
+        <NoHayRegistros><span style="color:red">No hay películas</span></NoHayRegistros>*@        
+    </ListadoPeliculas>   
+</div>
+<div>
+    <h3>Crear nueva película</h3>
+    <EjemploTextbox placeholder="Nombre película" disableb="true"/>
 </div>
 
 @code {
     string nombre = "Felipe";
 
-    protected override async Task OnInitializedAsync()
+    private List<Pelicula> ObtenerPeliculas()
     {
-        //await Task.Delay(3000);
-        Peliculas = ObtenerPeliculas();
+        //return null;
+        return new List<Pelicula>()
+        {
+                new Pelicula(){Titulo = "<b>Spider-Man</b>: Far From Home", Lanzamiento  = new DateTime(2019, 7, 2)},
+                new Pelicula(){Titulo = "<i>Moana</i>", Lanzamiento  = new DateTime(2016, 11, 23)},
+                new Pelicula(){Titulo = "Inception", Lanzamiento  = new DateTime(2010, 7, 16)}
+            };
     }
 
     public Pelicula SpiderMan { get { return ObtenerPelicula(); } }
-    public List<Pelicula> Peliculas;
 
     private Pelicula ObtenerPelicula()
     {
@@ -60,16 +41,6 @@
         {
             Titulo = "Spider-Man: Far From Home",
             Lanzamiento = new DateTime(2019, 7, 2)
-        };
-    }
-
-    private List<Pelicula> ObtenerPeliculas()
-    {
-        return new List<Pelicula>()
-    {
-            new Pelicula(){Titulo = "<b>Spider-Man</b>: Far From Home", Lanzamiento  = new DateTime(2019, 7, 2)},
-            new Pelicula(){Titulo = "<i>Moana</i>", Lanzamiento  = new DateTime(2016, 11, 23)},
-            new Pelicula(){Titulo = "Inception", Lanzamiento  = new DateTime(2010, 7, 16)}
         };
     }
 

@@ -1,0 +1,49 @@
+﻿<h3>Listado Peliculas</h3>
+<input type="checkbox" @bind="@MostrarBotones" />
+@*<input type="checkbox" @onchange="@(() => MostrarBotones = !MostrarBotones)" />*@
+
+<ListadoGenerico Listado="Peliculas">
+    <HayRegistros Context="pelicula">
+        <PeliculaIndividual Pelicula="pelicula" EliminarPelicula="EliminarPelicula"
+                            MostrarBotones="MostrarBotones" />
+    </HayRegistros>
+</ListadoGenerico>
+
+@*@foreach (var pelicula in Peliculas)
+    {
+        <PeliculaIndividual Pelicula="pelicula" EliminarPelicula="EliminarPelicula"
+                            MostrarBotones="MostrarBotones" />
+    }*@
+
+@*@for (var i = 0; i < Peliculas.Count; i++)
+    {
+        <div>
+            @if (i == Peliculas.Count - 1)
+            {
+                <p>Esta es la última película</p>
+            }
+            <p>@(i + 1)) Título: @((MarkupString)Peliculas[i].Titulo)</p>
+            <p>Fecha Lanzamiento: <b>@Peliculas[i].Lanzamiento.ToString("dd MMM yyyy")</b></p>
+        </div>
+    }*@
+
+@code {
+    [Parameter] public List<Pelicula> Peliculas { get; set; }
+    //[Parameter] public RenderFragment Cargando { get; set; }
+    //[Parameter] public RenderFragment NoHayRegistros { get; set; }
+
+    bool MostrarBotones = false;
+
+    void EliminarPelicula(Pelicula pelicula)
+    {
+        Peliculas.Remove(pelicula);
+        Console.WriteLine($"Se ha Eliminado la película  { pelicula.Titulo}");
+    }
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    //await Task.Delay(3000);
+    //    Peliculas = ObtenerPeliculas();
+    //}
+
+}
