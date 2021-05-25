@@ -32,7 +32,29 @@
     //[Parameter] public RenderFragment Cargando { get; set; }
     //[Parameter] public RenderFragment NoHayRegistros { get; set; }
 
-    bool MostrarBotones = false;
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("oninicialized");
+    }
+
+    protected override void OnParametersSet()       
+    {
+        Console.WriteLine("OnParametersSet");
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+       
+    {
+        Console.WriteLine($"OnAfterRender: primera vez: {firstRender}");
+    }
+
+    protected override bool ShouldRender()
+    {
+        Console.WriteLine("OnParametersSet");
+        return true;
+    }
+
+        bool MostrarBotones = false;
 
     void EliminarPelicula(Pelicula pelicula)
     {
