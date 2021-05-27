@@ -1,4 +1,6 @@
 ﻿@page "/"
+@inject IRepositorio repositorio
+
 @*<p>Hola, @UtilidadesString.Enmayuscular(nombre)</p>
 
     <p>Vamos a sumar 2 + 2 = @(2 + 2)</p>
@@ -8,41 +10,49 @@
     </button>*@
 
 <div>
-    <h3>Películas</h3>    
-    <ListadoPeliculas Peliculas="ObtenerPeliculas()">
+    <h3>Películas</h3>
+    <ListadoPeliculas Peliculas="Peliculas">
         @*<Cargando><text>Me paso el dia Cargando...</text></Cargando>
-        <NoHayRegistros><span style="color:red">No hay películas</span></NoHayRegistros>*@        
-    </ListadoPeliculas>   
+            <NoHayRegistros><span style="color:red">No hay películas</span></NoHayRegistros>*@
+    </ListadoPeliculas>
 </div>
 <div>
     <h3>Crear nueva película</h3>
-    <EjemploTextbox placeholder="Nombre película" disableb="true"/>
+    <EjemploTextbox placeholder="Nombre película" disabled="true" />
 </div>
+
+<button @onclick="AgregarPelicula">Agregar Pelicula</button>
 
 @code {
     string nombre = "Felipe";
+    private List<Pelicula> Peliculas;
 
-    private List<Pelicula> ObtenerPeliculas()
+    protected override void OnInitialized()
     {
-        //return null;
-        return new List<Pelicula>()
-        {
-                new Pelicula(){Titulo = "<b>Spider-Man</b>: Far From Home", Lanzamiento  = new DateTime(2019, 7, 2)},
-                new Pelicula(){Titulo = "<i>Moana</i>", Lanzamiento  = new DateTime(2016, 11, 23)},
-                new Pelicula(){Titulo = "Inception", Lanzamiento  = new DateTime(2010, 7, 16)}
-            };
+        Peliculas = repositorio.ObtenerPeliculas();
     }
 
-    public Pelicula SpiderMan { get { return ObtenerPelicula(); } }
-
-    private Pelicula ObtenerPelicula()
+    void AgregarPelicula()
     {
-        return new Pelicula()
-        {
-            Titulo = "Spider-Man: Far From Home",
-            Lanzamiento = new DateTime(2019, 7, 2)
-        };
+        Peliculas.Add(new Pelicula() { Titulo = "Nueva Pelicula", Lanzamiento = DateTime.Today });
     }
+
+    //private List<Pelicula> ObtenerPeliculas()
+    //{
+    //    return null;
+    //    // return
+    //}
+
+    //public Pelicula SpiderMan { get { return ObtenerPelicula(); } }
+
+    //private Pelicula ObtenerPelicula()
+    //{
+    //    return new Pelicula()
+    //    {
+    //        Titulo = "Spider-Man: Far From Home",
+    //        Lanzamiento = new DateTime(2019, 7, 2)
+    //    };
+    //}
 
     private void ManejarClick()
     {
