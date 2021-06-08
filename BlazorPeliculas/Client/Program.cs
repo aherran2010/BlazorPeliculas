@@ -1,4 +1,5 @@
 //using BlazorPeliculas.Client.Repositorio;
+using BlazorPeliculas.Client.Helpers;
 using BlazorPeliculas.Client.Repositorios;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ namespace BlazorPeliculas.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
+            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             ConfigureServices(builder.Services);
@@ -27,9 +29,10 @@ namespace BlazorPeliculas.Client
         }
         private static void ConfigureServices(IServiceCollection services)
         {   
-            services.AddSingleton<ServiciosSingleton>();
-            services.AddSingleton<ServiciosTransient>();
-            services.AddSingleton<IRepositorio, Repositorio>();
+            //services.AddSingleton<ServiciosSingleton>();
+            //services.AddSingleton<ServiciosTransient>();
+            services.AddScoped<IRepositorio, Repositorio>();
+            services.AddScoped<IMostrarMensajes, MostrarMensajes>();
         }
     }
 }
