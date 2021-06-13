@@ -1,6 +1,6 @@
 ﻿@page "/"
+@page "/index"
 @inject IRepositorio repositorio
-
 @*<p>Hola, @UtilidadesString.Enmayuscular(nombre)</p>
 
     <p>Vamos a sumar 2 + 2 = @(2 + 2)</p>
@@ -10,8 +10,15 @@
     </button>*@
 
 <div>
-    <h3>Películas</h3>
-    <ListadoPeliculas Peliculas="Peliculas">
+    <h3>En cartelera</h3>
+    <ListadoPeliculas Peliculas="EnCartelera">
+        @*<Cargando><text>Me paso el dia Cargando...</text></Cargando>
+            <NoHayRegistros><span style="color:red">No hay películas</span></NoHayRegistros>*@
+    </ListadoPeliculas>
+</div>
+<div>
+    <h3>Próximos estrenos</h3>
+    <ListadoPeliculas Peliculas="FuturosEstrenos">
         @*<Cargando><text>Me paso el dia Cargando...</text></Cargando>
             <NoHayRegistros><span style="color:red">No hay películas</span></NoHayRegistros>*@
     </ListadoPeliculas>
@@ -26,10 +33,15 @@
 @code {
     string nombre = "Felipe";
     private List<Pelicula> Peliculas;
+    private List<Pelicula> EnCartelera;
+    private List<Pelicula> FuturosEstrenos;
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        Peliculas = repositorio.ObtenerPeliculas();
+        var httpResponse = await repositorio.Get<HomePageDTO>("api/peliculas");
+        FuturosEstrenos = httpResponse.Response.ProximosEstrenos;
+        EnCartelera = httpResponse.Response.PeliculasEnCartelera;
+        //Peliculas = repositorio.ObtenerPeliculas();
     }
 
     void AgregarPelicula()

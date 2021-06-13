@@ -1,29 +1,51 @@
-﻿@page "/peliculas/crear" 
-@inject NavigationManager navigatorManager
+﻿@page "/peliculas/crear"
+@inject NavigationManager navigationManager
+@inject IRepositorio repositorio
+@inject IMostrarMensajes mostrarMensajes
 <h3>Crear Pelicula</h3>
-<FormularioPeliculas Pelicula="Pelicula" GenerosNoSeleccionados="GenerosNoSeleccionados" OnValidSubmit="Crear">
-
-</FormularioPeliculas>
+@if (MostrarFormulario)
+{
+    <FormularioPeliculas Pelicula="Pelicula" OnValidSubmit="Crear"
+        GenerosNoSeleccionados="GenerosNoSeleccionados"></FormularioPeliculas> }
+else
+{
+    <text>Cargando...</text>
+}
 @*<button @onclick="Crear"></button>*@
 @code {
     private Pelicula Pelicula = new Pelicula();
     private List<Genero> GenerosNoSeleccionados = new List<Genero>();
+    private bool MostrarFormulario { get; set; } = false;
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        GenerosNoSeleccionados = new List<Genero>()
-        {
-            new Genero(){Id = 1, Nombre = "Comedia"},
-            new Genero(){Id = 2, Nombre = "Drama"},
-            new Genero(){Id = 3, Nombre = "Acción"},
-            new Genero(){Id = 4, Nombre = "Sci-fi"}
-        };
+        //    GenerosNoSeleccionados = new List<Genero>()
+        //{
+        //        new Genero(){Id = 1, Nombre = "Comedia"},
+        //        new Genero(){Id = 2, Nombre = "Drama"},
+        //        new Genero(){Id = 3, Nombre = "Acción"},
+        //        new Genero(){Id = 4, Nombre = "Sci-fi"}
+        //    };
+        var responseHttp = await repositorio.Get<List<Genero>>("api/generos");
+        GenerosNoSeleccionados = responseHttp.Response;
+        MostrarFormulario = true;
     }
 
-    void Crear()
+    async Task Crear()
     {
-        Console.WriteLine(navigatorManager.BaseUri);
-        navigatorManager.NavigateTo("pelicula");
+        //Console.WriteLine(navigatorManager.BaseUri);
+        var httpResponse = await repositorio.Post<Pelicula, int>("api/peliculas", Pelicula);
+
+        if (httpResponse.Error)
+        {
+            var mensajeError = await httpResponse.GetBody();
+            await mostrarMensajes.MostrarMensajeError(mensajeError);
+        }
+        else
+        {
+            var PeliculaId = httpResponse.Response;
+            navigationManager.NavigateTo($"/pelicula/{PeliculaId}/{Pelicula.Titulo.Replace(" ", "-")}");
+        }
 
     }
 }
