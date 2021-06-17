@@ -22,6 +22,7 @@ namespace BlazorPeliculas.Client.Repositorios
         public async Task<HttpResponseWrapper<T>> Get<T>(string url)
         {
             var responseHTTP = await httpClient.GetAsync(url);
+
             if (responseHTTP.IsSuccessStatusCode)
             {
                 var response = await DeserializarRespuesta<T>(responseHTTP, OpcionesPorDefectoJSON);
@@ -35,12 +36,16 @@ namespace BlazorPeliculas.Client.Repositorios
 
         public async Task<HttpResponseWrapper<object>> Post<T>(string url, T enviar)
         {
+            //var enviarJSON = JsonSerializer.Serialize(enviar);
+            //var enviarContent = new StringContent(enviarJSON, Encoding.UTF8, "application/json");
+            //var responseHttp = await httpClient.PostAsync(url, enviarContent);
+            //return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+
             var enviarJSON = JsonSerializer.Serialize(enviar);
             var enviarContent = new StringContent(enviarJSON, Encoding.UTF8, "application/json");
             var responseHttp = await httpClient.PostAsync(url, enviarContent);
             return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
         }
-
 
         public async Task<HttpResponseWrapper<TResponse>> Post<T, TResponse>(string url, T enviar)
         {
@@ -58,32 +63,32 @@ namespace BlazorPeliculas.Client.Repositorios
             }
         }
 
-            private async Task<T> DeserializarRespuesta<T>(HttpResponseMessage httpResponse, JsonSerializerOptions jsonSerializerOptions)
-            {
-                var responseString = await httpResponse.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<T>(responseString, jsonSerializerOptions);
-            }
+        private async Task<T> DeserializarRespuesta<T>(HttpResponseMessage httpResponse, JsonSerializerOptions jsonSerializerOptions)
+        {
+            var responseString = await httpResponse.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<T>(responseString, jsonSerializerOptions);
+        }
 
-            //public async Task<HttpResponseWrapper<object>> Post<T>(string url, T enviar)
-            //{
-            //    var enviarJSON = JsonSerializer.Serialize(enviar);
-            //    var enviarContent = new StringContent(enviarJSON, Encoding.UTF8, "application/json");
-            //    var responseHttp = await httpClient.PostAsync(url, enviarContent);
-            //    return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
-            //}
-            //public async Task<HttpResponseWrapper<object>> Post<T>(string url, T enviar)
-            //{
-            //    var enviarJSON = JsonSerializer.Serialize(enviar);
-            //    var enviarContent = new StringContent(enviarJSON, Encoding.UTF8, "application/json");
-            //    var responseHttp = await httpClient.PostAsync(url, enviarContent);
-            //    return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+        //public async Task<HttpResponseWrapper<object>> Post<T>(string url, T enviar)
+        //{
+        //    var enviarJSON = JsonSerializer.Serialize(enviar);
+        //    var enviarContent = new StringContent(enviarJSON, Encoding.UTF8, "application/json");
+        //    var responseHttp = await httpClient.PostAsync(url, enviarContent);
+        //    return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+        //}
+        //public async Task<HttpResponseWrapper<object>> Post<T>(string url, T enviar)
+        //{
+        //    var enviarJSON = JsonSerializer.Serialize(enviar);
+        //    var enviarContent = new StringContent(enviarJSON, Encoding.UTF8, "application/json");
+        //    var responseHttp = await httpClient.PostAsync(url, enviarContent);
+        //    return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
 
-            //    //var enviarJSON = JsonSerializer.Serialize(enviar);
-            //    //var enviarContent = new StringContent(enviarJSON, Encoding.UTF8, "application/json");
-            //    //var responseHttp = await httpClient.PostAsync(url, enviarContent);
-            //    //return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
-            //}
-            public List<Pelicula> ObtenerPeliculas()
+        //    //var enviarJSON = JsonSerializer.Serialize(enviar);
+        //    //var enviarContent = new StringContent(enviarJSON, Encoding.UTF8, "application/json");
+        //    //var responseHttp = await httpClient.PostAsync(url, enviarContent);
+        //    //return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+        //}
+        public List<Pelicula> ObtenerPeliculas()
         {
            return  new List<Pelicula>()
         {

@@ -29,6 +29,8 @@ else
         var responseHttp = await repositorio.Get<List<Genero>>("api/generos");
         GenerosNoSeleccionados = responseHttp.Response;
         MostrarFormulario = true;
+
+       
     }
 
     async Task Crear()

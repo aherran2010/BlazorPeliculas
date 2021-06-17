@@ -1,14 +1,43 @@
 ﻿@page "/pelicula/{PeliculaId:int}"
 @page "/pelicula/{PeliculaId:int}/{NombrePelicula}"
+@inject IRepositorio repositorio
+@inject NavigationManager navigationManager
+@inject IMostrarMensajes mostrarMensajes
 
-<h3>VisualizarPelicula</h3>
+<h3>Visualizar Pelicula</h3>
+@if (model == null)
+{
+    <text>Cargando...</text>
+}
+else
+{    
+    <h2>@model.Pelicula.Titulo (@model.Pelicula.Lanzamiento.Value.ToString("yyyy"))</h2>
+}
 
-@code {
+@code
+{
     [Parameter] public int PeliculaId { get; set; }
     [Parameter] public string NombrePelicula { get; set; }
+    private PeliculaVisualizarDTO model;
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        Console.WriteLine($"El id de la pelicula es {PeliculaId}");
+        var responseHttp = await repositorio.Get<PeliculaVisualizarDTO>($"api/peliculas/{PeliculaId}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("");
+            }
+            else
+            {
+                var mensajeError = await responseHttp.GetBody();
+                await mostrarMensajes.MostrarMensajeError(mensajeError);
+            }
+        }
+        else
+        {
+            model = responseHttp.Response;
+        }
     }
 }
